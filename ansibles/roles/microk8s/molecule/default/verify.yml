@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if MicroK8s is installed
+      command: microk8s status
+      register: microk8s_status
+      changed_when: false
+
+    - name: Verify MicroK8s is running
+      assert:
+        that:
+          - "'microk8s is running' in microk8s_status.stdout" 

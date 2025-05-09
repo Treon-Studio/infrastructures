@@ -1,0 +1,7 @@
+---
+- name: Test koneksi ke server
+  hosts: vm-dev
+  gather_facts: false
+  tasks:
+    - name: Ping server
+      ping:

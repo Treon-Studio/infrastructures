@@ -1,0 +1,33 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - snapd
+      - open-iscsi
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install MicroK8s via snap
+  community.general.snap:
+    name: microk8s
+    classic: yes
+    channel: latest/stable
+    state: present
+
+- name: Wait for MicroK8s to be ready
+  command: microk8s status --wait-ready
+  changed_when: false
+  register: microk8s_status
+  until: microk8s_status.rc == 0
+  retries: 30
+  delay: 10
+
+- name: Add current user to microk8s group
+  user:
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: yes
+
+- name: Enable basic MicroK8s addons
+  command: "microk8s enable dns storage ingress"
+  changed_when: true 
