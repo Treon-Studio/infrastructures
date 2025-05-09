@@ -1,0 +1,6 @@
+---
+microk8s_channel: latest/stable
+microk8s_addons:
+  - dns
+  - storage
+  - ingress 

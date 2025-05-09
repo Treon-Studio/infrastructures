@@ -1,0 +1,13 @@
+---
+exclude_paths:
+  - .cache/
+  - .git/
+  - .tox/
+  - .venv/
+  - molecule/
+  - tests/
+
+skip_list:
+  - yaml  # skip yaml formatting
+  - no-changed-when  # Commands should not change things if nothing needs doing
+  - no-handler  # Tasks that run when changed should likely be handlers 

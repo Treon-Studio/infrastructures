@@ -1,0 +1,1 @@
+USER_SSH_KEY="$(cat /Users/username/.ssh/id_rsa.pub)" ansible-playbook -i inventory.yaml playbooks/02-ssh-create-user.yaml
