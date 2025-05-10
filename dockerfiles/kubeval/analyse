@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# This script iterates over all kustomize overlays under specified
+# directory, renders the resulting manifests and performs a kubeval check on them
+
+set -e
+
+OUTDIR=${OUTDIR:-/tmp/kubeval-out/}
+ANALYSEDIR=${1:-.}
+
+analyse_overlay() {
+  tempfile="$OUTDIR"/$(basename "$1")
+  kubectl kustomize "$1" > "$tempfile"
+  kubeval "$tempfile"
+}
+
+analyse_k8s() {
+  if [ -e "$1"/overlays ]; then
+    for overlay in "$1"/overlays/*; do
+      analyse_overlay "$overlay"
+    done
+  else
+    for overlay in "$1"/*/overlays/*; do
+      analyse_overlay "$overlay"
+    done
+  fi
+}
+
+mkdir -p "$OUTDIR"
+analyse_k8s "$ANALYSEDIR"
+rm -rf "$OUTDIR"
+
+exit 0
